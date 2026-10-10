@@ -306,6 +306,7 @@ Statistical discipline: same 150 rows for every model (paired design); Wilson CI
 6. **Pretraining contamination.** CLINC150 is public and old enough that LLMs have likely seen it; this applies equally to all contestants and is disclosed. Absolute numbers may be inflated; comparisons remain internally valid.
 7. **Small-n CIs.** 150 rows / 75 per difficulty group support directional findings and large-gap detection, not fine-grained model rankings.
 8. **Zero-shot only.** No few-shot examples in prompts (matches the production "no labeled data" regime; few-shot is post-MVP).
+9. **Latency is measured under load (amendment, 2026-10-09).** The MVP's LLM grid runs concurrently (≤4 calls in flight per model, 5 models at once) on a laptop shared with other work, so recorded latencies are contention-polluted upper bounds, not clean serving numbers. Latency stays in the results schema for directionality; any latency-sensitive analysis (e.g., the post-MVP cost/latency tables) must be re-measured on a quiet machine.
 
 ---
 

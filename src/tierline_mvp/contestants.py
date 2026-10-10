@@ -182,8 +182,11 @@ class Contestant:
 
 
 class OpenRouterContestant(Contestant):
-    MAX_ATTEMPTS = 3
-    BACKOFF_S = (1.0, 2.0)  # exponential backoff before attempts 2 and 3
+    # Provider rate limits (HTTP 429) are the dominant failure mode under
+    # concurrency: attempts must be patient. Honor Retry-After when present;
+    # otherwise escalate 2s -> 30s. Six attempts spans ~1 minute of patience.
+    MAX_ATTEMPTS = 6
+    BACKOFF_S = (2.0, 4.0, 8.0, 15.0, 30.0)
 
     def __init__(self, key: str, client: httpx.Client | None = None):
         meta = OPENROUTER_MODELS[key]
@@ -226,9 +229,12 @@ class OpenRouterContestant(Contestant):
         headers = self._headers()
 
         last_error = None
+        next_delay: float | None = None  # set by Retry-After on a 429
         for attempt in range(self.MAX_ATTEMPTS):
             if attempt:
-                time.sleep(self.BACKOFF_S[min(attempt - 1, len(self.BACKOFF_S) - 1)])
+                time.sleep(next_delay if next_delay is not None
+                           else self.BACKOFF_S[min(attempt - 1, len(self.BACKOFF_S) - 1)])
+                next_delay = None
             started = time.perf_counter()
             try:
                 resp = self._http().post(self._endpoint(), headers=headers, json=payload)
@@ -240,6 +246,12 @@ class OpenRouterContestant(Contestant):
                 return self._parse(resp.json(), latency_ms)
             if resp.status_code == 429 or resp.status_code >= 500:
                 last_error = f"HTTP {resp.status_code}"
+                retry_after = resp.headers.get("retry-after")
+                if retry_after:
+                    try:
+                        next_delay = min(float(retry_after), 60.0)
+                    except ValueError:
+                        next_delay = None
                 continue
             # Other 4xx: not retryable (bad request, auth, ...).
             return error_result(f"HTTP {resp.status_code}: {resp.text[:200]}")

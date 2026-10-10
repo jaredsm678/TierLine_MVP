@@ -1,0 +1,38 @@
+{
+  "balance_at_preflight": {
+    "account_remaining_usd": 9.8137115,
+    "key_limit_remaining_usd": 9.8137115
+  },
+  "effective_cap_usd": 9.3137115,
+  "updated_at_utc": "2026-10-10T06:55:30+00:00",
+  "served_gemma-4-31b": {
+    "slug": "google/gemma-4-31b-it",
+    "served_model": "google/gemma-4-31b-it",
+    "provider": "DeepInfra",
+    "verified_at": "2026-10-10T06:55:30+00:00"
+  },
+  "served_gemini-3.8-flash": {
+    "slug": "google/gemini-3.8-flash",
+    "served_model": "google/gemini-3.8-flash",
+    "provider": "Google",
+    "verified_at": "2026-10-10T06:55:24+00:00"
+  },
+  "served_gpt-6.1-sol": {
+    "slug": "openai/gpt-6.1-sol",
+    "served_model": "openai/gpt-6.1-sol",
+    "provider": "OpenAI",
+    "verified_at": "2026-10-10T06:55:26+00:00"
+  },
+  "served_claude-5.5-opus-thinking": {
+    "slug": "anthropic/claude-opus-5.5",
+    "served_model": "anthropic/claude-opus-5.5",
+    "provider": "Claude Platform on AWS",
+    "verified_at": "2026-10-10T06:55:27+00:00"
+  },
+  "served_kimi-k3": {
+    "slug": "moonshotai/kimi-k3",
+    "served_model": "moonshotai/kimi-k3",
+    "provider": "Decart",
+    "verified_at": "2026-10-10T06:55:28+00:00"
+  }
+}

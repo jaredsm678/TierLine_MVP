@@ -98,7 +98,24 @@ def test_retry_on_429_then_success():
     assert len(calls) == 2
 
 
-def test_gives_up_after_three_5xx_attempts():
+def test_rate_limit_storm_survives_within_six_attempts():
+    # models the 429 storm seen in the first concurrent run: several 429s in a
+    # row, then success — must survive without giving up.
+    calls = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(1)
+        if len(calls) <= 4:
+            return httpx.Response(429, json={"error": "rate limited"})
+        return ok_body()
+
+    c = make_contestant(handler)
+    result = c.predict("u", list(schema.OPTIONS), schema.DEFINITIONS, "V1")
+    assert result["error"] is None and result["label"] == "pay_bill"
+    assert len(calls) == 5
+
+
+def test_gives_up_after_six_5xx_attempts():
     calls = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -107,10 +124,28 @@ def test_gives_up_after_three_5xx_attempts():
 
     c = make_contestant(handler)
     result = c.predict("u", list(schema.OPTIONS), schema.DEFINITIONS, "V1")
-    assert len(calls) == 3
+    assert len(calls) == contestants.OpenRouterContestant.MAX_ATTEMPTS == 6
     assert result["label"] is None
-    assert result["error"] is not None and "gave up after 3 attempts" in result["error"]
+    assert result["error"] is not None and "gave up after 6 attempts" in result["error"]
     assert result["cost_usd"] == 0.0
+
+
+def test_429_retry_after_header_is_honored(monkeypatch):
+    calls = []
+    sleeps = []
+    monkeypatch.setattr(contestants.time, "sleep", lambda s: sleeps.append(s))
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(1)
+        if len(calls) == 1:
+            return httpx.Response(429, json={"error": "rate limited"},
+                                  headers={"Retry-After": "0"})
+        return ok_body()
+
+    c = make_contestant(handler)
+    result = c.predict("u", list(schema.OPTIONS), schema.DEFINITIONS, "V1")
+    assert result["error"] is None and len(calls) == 2
+    assert sleeps == [0.0]  # Retry-After overrode the default ladder
 
 
 def test_non_retryable_4xx_fails_immediately():
