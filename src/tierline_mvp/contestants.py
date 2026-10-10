@@ -94,28 +94,36 @@ def error_result(message: str) -> dict:
             "raw": None, "error": message}
 
 
-def api_key() -> str:
-    """OPENROUTER_API_KEY from the environment, or a git-ignored .env file.
+def _key_from_env_or_dotenv(var: str) -> str:
+    """API key from the environment, or a git-ignored .env file (§10).
 
-    §10 mandates env vars only; the value is never logged or written to
-    results. The .env fallback exists because the app's shell may not inherit
-    the user's interactive environment; .env is in .gitignore.
+    Values are never logged or written to results. The .env fallback exists
+    because the app's shell may not inherit the user's interactive
+    environment; .env is in .gitignore.
     """
-    key = os.environ.get("OPENROUTER_API_KEY")
+    key = os.environ.get(var)
     if key:
         return key
     env_file = Path(__file__).resolve().parents[2] / ".env"
     if env_file.exists():
         for line in env_file.read_text(encoding="utf-8").splitlines():
             line = line.strip()
-            if line.startswith("OPENROUTER_API_KEY="):
+            if line.startswith(f"{var}="):
                 value = line.split("=", 1)[1].strip().strip('"').strip("'")
                 if value:
                     return value
     raise RuntimeError(
-        "OPENROUTER_API_KEY is not set: export it as an env var or put "
-        "'OPENROUTER_API_KEY=...' in a git-ignored .env at the repo root"
+        f"{var} is not set: export it as an env var or put '{var}=...' in a "
+        "git-ignored .env at the repo root"
     )
+
+
+def api_key() -> str:
+    return _key_from_env_or_dotenv("OPENROUTER_API_KEY")
+
+
+def jev_api_key() -> str:
+    return _key_from_env_or_dotenv("JEV_API_KEY")
 
 
 def openrouter_balance() -> dict:
@@ -331,7 +339,8 @@ class SystemOneContestant(Contestant):
     instructions = S1_INSTRUCTIONS
 
     def __init__(self):
-        self._model = None  # lazy: weights download on first use (§10.2)
+        self._model = None   # lazy: weights download on first use (§10.2)
+        self._client = None  # optional httpx.Client for hosted S1 adapters (Jev)
 
     def predict(
         self,
@@ -346,18 +355,19 @@ class SystemOneContestant(Contestant):
             raise ValueError("options/definitions do not match the frozen schema")
         started = time.perf_counter()
         try:
-            label, probs, raw = self._system_one(state_text, list(options), dict(definitions))
+            label, probs, raw, cost_usd = self._system_one(state_text, list(options), dict(definitions))
         except Exception as exc:  # noqa: BLE001 — recorded as an error row (§7.2)
             return error_result(f"{type(exc).__name__}: {exc}")
         latency_ms = int((time.perf_counter() - started) * 1000)
         return {"label": label, "probs": probs, "latency_ms": latency_ms,
-                "cost_usd": 0.0, "raw": raw, "error": None}
+                "cost_usd": cost_usd, "raw": raw, "error": None}
 
     def _criteria(self, options: list[str], definitions: dict[str, str]) -> dict[str, str]:
         return {option: definitions[option] for option in options}
 
     def _system_one(self, state_text: str, options: list[str],
-                    definitions: dict[str, str]) -> tuple[str, dict | None, str]:
+                    definitions: dict[str, str]) -> tuple[str, dict | None, str, float]:
+        """Returns (label, native probabilities, raw record, cost_usd)."""
         raise NotImplementedError
 
 
@@ -374,7 +384,7 @@ class OpenDeciderContestant(SystemOneContestant):
         )}
         resp = self._model.system_one(state_text, question)
         answer = resp["answers"]["intent"]
-        return answer["choice"], answer.get("probabilities"), _json(resp)
+        return answer["choice"], answer.get("probabilities"), _json(resp), 0.0
 
 
 class LayaContestant(SystemOneContestant):
@@ -391,7 +401,7 @@ class LayaContestant(SystemOneContestant):
         label = self._model.invoke(state_text)
         decision = self._model.last_decision
         answer = decision["answers"]["route"]  # LayaRouter names its question "route"
-        return answer.get("choice", label), answer.get("probabilities"), _json(decision)
+        return answer.get("choice", label), answer.get("probabilities"), _json(decision), 0.0
 
 
 class DeciderContestant(SystemOneContestant):
@@ -408,7 +418,7 @@ class DeciderContestant(SystemOneContestant):
         }}
         resp = self._model.system_one(state_text, question)
         answer = resp["answers"]["intent"]
-        return answer["choice"], answer.get("probabilities"), _json(resp)
+        return answer["choice"], answer.get("probabilities"), _json(resp), 0.0
 
 
 class LevContestant(SystemOneContestant):
@@ -425,7 +435,7 @@ class LevContestant(SystemOneContestant):
         }}
         resp = self._model.system_one(state_text, question)
         answer = resp.answers["intent"]
-        return answer.choice, dict(answer.probabilities), _json(_dump(resp))
+        return answer.choice, dict(answer.probabilities), _json(_dump(resp)), 0.0
 
 
 class VonContestant(SystemOneContestant):
@@ -442,7 +452,75 @@ class VonContestant(SystemOneContestant):
         )}
         resp = von.system_one(state_text, question)
         answer = resp.answers["intent"]
-        return answer.choice, dict(answer.probabilities), _json(_dump(resp))
+        return answer.choice, dict(answer.probabilities), _json(_dump(resp)), 0.0
+
+
+class JevContestant(SystemOneContestant):
+    """Hosted Jev via TypeSafe's official System One API (§7.1 row 4, amended
+    2026-10-10). V1-only like all S1 contestants (§6.2). Pinned model
+    jev-1.13.0 (frozen eval -> no alias drift); published price $0.042 per
+    million input tokens, output free (docs.typesafe.ai/models, verified
+    2026-10-10); cost is computed from the response's input_tokens. TypeSafe
+    signals overload with HTTP 529 — retried like 429/5xx."""
+
+    name = "Jev (jev-1.13.0)"
+    MODEL = "jev-1.13.0"
+    URL = "https://api.typesafe.ai/v1/systemone"
+    PRICE_INPUT_PER_1M_USD = 0.042
+    MAX_ATTEMPTS = 6
+    BACKOFF_S = (2.0, 4.0, 8.0, 15.0, 30.0)
+
+    def __init__(self, client: httpx.Client | None = None):
+        super().__init__()
+        self._client = client
+
+    def _http(self) -> httpx.Client:
+        if self._client is None:
+            self._client = httpx.Client(timeout=60)
+        return self._client
+
+    def _system_one(self, state_text, options, definitions):
+        payload = {
+            "model": self.MODEL,
+            "state": state_text,
+            "questions": {"intent": {
+                "type": "choice",
+                "instructions": self.instructions,
+                "criteria": self._criteria(options, definitions),
+            }},
+        }
+        headers = {"Authorization": f"Bearer {jev_api_key()}"}
+        last_error = None
+        next_delay: float | None = None
+        for attempt in range(self.MAX_ATTEMPTS):
+            if attempt:
+                time.sleep(next_delay if next_delay is not None
+                           else self.BACKOFF_S[min(attempt - 1, len(self.BACKOFF_S) - 1)])
+                next_delay = None
+            try:
+                resp = self._http().post(self.URL, headers=headers, json=payload)
+            except httpx.HTTPError as exc:
+                last_error = f"network error: {type(exc).__name__}"
+                continue
+            if resp.status_code == 200:
+                data = resp.json()
+                answer = data["answers"]["intent"]
+                usage = data.get("usage") or {}
+                cost = usage.get("input_tokens", 0) * self.PRICE_INPUT_PER_1M_USD / 1e6
+                return (answer["choice"], answer.get("probabilities"),
+                        _json(data), cost)
+            if resp.status_code in (429, 529) or resp.status_code >= 500:
+                last_error = f"HTTP {resp.status_code}"
+                retry_after = resp.headers.get("retry-after")
+                if retry_after:
+                    try:
+                        next_delay = min(float(retry_after), 60.0)
+                    except ValueError:
+                        next_delay = None
+                continue
+            # Other 4xx: not retryable — surfaced as an error row by the base.
+            raise RuntimeError(f"Jev HTTP {resp.status_code}: {resp.text[:200]}")
+        raise RuntimeError(f"gave up after {self.MAX_ATTEMPTS} attempts: {last_error}")
 
 
 def _dump(obj):
@@ -454,16 +532,20 @@ def _json(obj) -> str:
     return json.dumps(obj, ensure_ascii=False, default=str)
 
 
-# Roster keys beyond the OpenRouter table (§7.1 rows 1-5).
+# Roster keys beyond the OpenRouter table (§7.1).
 # (Row 10, Gemma, moved to the OpenRouter table by the 2026-10-09 amendment;
 # LocalOpenAIContestant stays available for any future local LLM.)
+# Row 4, lev, was replaced by hosted Jev by the 2026-10-10 amendment;
+# LevContestant remains available ("lev" still builds) but is off-roster.
 LOCAL_CONTESTANT_KEYS = (
     "opendecider-nano",
     "laya-421m",
     "decider-2b",
-    "lev",
     "von",
 )
+
+# §7.1 row 4 (amended 2026-10-10): hosted Jev via TypeSafe's official API.
+HOSTED_S1_KEYS = ("jev",)
 
 
 def build_contestant(key: str, client: httpx.Client | None = None) -> Contestant:
@@ -480,9 +562,14 @@ def build_contestant(key: str, client: httpx.Client | None = None) -> Contestant
         return LevContestant()
     if key == "von":
         return VonContestant()
+    if key == "jev":
+        return JevContestant()
+    if key == "lev":  # off-roster since the 2026-10-10 amendment; still buildable
+        return LevContestant()
     raise KeyError(f"unknown contestant {key!r}; known: "
-                   f"{sorted(list(OPENROUTER_MODELS) + list(LOCAL_CONTESTANT_KEYS))}")
+                   f"{sorted(ALL_CONTESTANT_KEYS)}")
 
 
-#: All ten roster keys (§7.1).
-ALL_CONTESTANT_KEYS = tuple(OPENROUTER_MODELS) + LOCAL_CONTESTANT_KEYS
+#: All ten roster keys (§7.1, as amended): 5 OpenRouter LLMs + 4 local S1 + Jev.
+ALL_CONTESTANT_KEYS = (tuple(OPENROUTER_MODELS) + LOCAL_CONTESTANT_KEYS
+                       + HOSTED_S1_KEYS)

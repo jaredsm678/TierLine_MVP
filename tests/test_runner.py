@@ -191,13 +191,17 @@ def test_charge_accumulates_and_counts():
     assert meter.calls == 2
 
 
-def test_all_five_openrouter_models_configured():
-    expected_keys = {"gemini-3.8-flash", "gpt-6.1-sol",
-                     "claude-5.5-opus-thinking", "kimi-k3", "gemma-4-31b"}
-    assert set(contestants.OPENROUTER_MODELS) == expected_keys
+def test_roster_keys_match_amended_design_doc():
+    expected_openrouter = {"gemini-3.8-flash", "gpt-6.1-sol",
+                           "claude-5.5-opus-thinking", "kimi-k3", "gemma-4-31b"}
+    assert set(contestants.OPENROUTER_MODELS) == expected_openrouter
+    # 2026-10-10 amendment: lev replaced by hosted Jev
     assert set(contestants.LOCAL_CONTESTANT_KEYS) == {
-        "opendecider-nano", "laya-421m", "decider-2b", "lev", "von"}
+        "opendecider-nano", "laya-421m", "decider-2b", "von"}
+    assert contestants.HOSTED_S1_KEYS == ("jev",)
     assert len(contestants.ALL_CONTESTANT_KEYS) == 10
+    assert "lev" not in contestants.ALL_CONTESTANT_KEYS  # off-roster but still buildable
+    contestants.build_contestant("lev")  # does not raise
 
 
 def test_model_entries_are_wellformed():

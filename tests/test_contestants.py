@@ -4,6 +4,7 @@ Uses httpx.MockTransport so no network and no real API key are involved
 (the key comes from the test environment).
 """
 
+import json
 import os
 
 import httpx
@@ -212,6 +213,91 @@ def test_openrouter_balance_parses_credits_and_key_limit(monkeypatch):
 def test_unknown_contestant_key_raises():
     with pytest.raises(KeyError, match="unknown contestant"):
         contestants.build_contestant("not-a-model")
+
+
+# --- Jev adapter (TypeSafe official API; offline via MockTransport) ----------
+
+def jev_body(choice="balance", input_tokens=2000):
+    return httpx.Response(200, json={
+        "model": "jev-1.13.0",
+        "answers": {"intent": {"type": "choice", "choice": choice,
+                               "confidence": 0.9,
+                               "probabilities": {"balance": 0.9, "pay_bill": 0.1}}},
+        "usage": {"input_tokens": input_tokens, "output_tokens": 31},
+    })
+
+
+def make_jev(handler, monkeypatch):
+    monkeypatch.setenv("JEV_API_KEY", "jev-test-key")
+    c = contestants.JevContestant(
+        client=httpx.Client(transport=httpx.MockTransport(handler)))
+    c.BACKOFF_S = (0.0, 0.0, 0.0, 0.0, 0.0)
+    return c
+
+
+def test_jev_parses_choice_probs_and_cost(monkeypatch):
+    calls = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(json.loads(request.content))
+        return jev_body(choice="balance", input_tokens=2500)
+
+    c = make_jev(handler, monkeypatch)
+    result = c.predict("u", list(schema.OPTIONS), schema.DEFINITIONS, "V1")
+    assert result["label"] == "balance"
+    assert result["probs"] == {"balance": 0.9, "pay_bill": 0.1}
+    assert result["error"] is None
+    assert result["cost_usd"] == pytest.approx(2500 * 0.042 / 1e6)
+    payload = calls[0]
+    assert payload["model"] == "jev-1.13.0"
+    assert payload["state"] == "u"
+    q = payload["questions"]["intent"]
+    assert q["type"] == "choice"
+    assert q["criteria"] == {o: schema.DEFINITIONS[o] for o in schema.OPTIONS}
+
+
+def test_jev_retries_529_then_succeeds(monkeypatch):
+    calls = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(1)
+        if len(calls) == 1:
+            return httpx.Response(529, json={"detail": "overloaded"})
+        return jev_body()
+
+    c = make_jev(handler, monkeypatch)
+    result = c.predict("u", list(schema.OPTIONS), schema.DEFINITIONS, "V1")
+    assert result["error"] is None and len(calls) == 2
+
+
+def test_jev_non_retryable_4xx_becomes_error_row(monkeypatch):
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(401, json={"detail": "bad key"})
+
+    c = make_jev(handler, monkeypatch)
+    result = c.predict("u", list(schema.OPTIONS), schema.DEFINITIONS, "V1")
+    assert result["label"] is None
+    assert result["error"] is not None and "401" in result["error"]
+
+
+def test_jev_gives_up_after_six_attempts(monkeypatch):
+    calls = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(1)
+        return httpx.Response(529, json={"detail": "overloaded"})
+
+    c = make_jev(handler, monkeypatch)
+    result = c.predict("u", list(schema.OPTIONS), schema.DEFINITIONS, "V1")
+    assert len(calls) == contestants.JevContestant.MAX_ATTEMPTS == 6
+    assert result["error"] is not None and "gave up after 6 attempts" in result["error"]
+
+
+def test_jev_api_key_missing_raises(monkeypatch):
+    monkeypatch.delenv("JEV_API_KEY", raising=False)
+    monkeypatch.setattr(contestants.Path, "exists", lambda self: False)
+    with pytest.raises(RuntimeError, match="JEV_API_KEY"):
+        contestants.jev_api_key()
 
 
 def test_api_key_missing_raises(monkeypatch):

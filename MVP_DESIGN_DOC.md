@@ -9,6 +9,14 @@ Rationale: the Kaggle Gemma competition (Gemma 4 Developer Agent Competition) ma
 `gemma-4-31b-it-qat-w4a16-ct` — a 31B-it QAT quantization — so the doc's original 12B pick never
 matched the referenced competition; 31B-it does. Quantization/serving-stack differences vs the
 competition's W4A16 build are disclosed.
+**Amendment (2026-10-10, session 5):** Roster row 4 changed by owner decision — local `lev`
+(interfaze-ai/lev) is replaced by **hosted Jev (`jev-1.13.0`, TypeSafe official API)**. Rationale:
+lev was the slowest System-One contestant (~60 s/call on CPU, ~2.5 h projected for 150 rows) and
+Jev is the hosted original that the System-One class is named after — the single most important
+S1-class comparison. Jev runs V1-only like all S1 contestants (§6.2); access via TypeSafe's
+official endpoint with the owner's key; published price $0.042/M input tokens (output free);
+served version pinned and recorded in the run records. The lev package and adapter remain in the
+codebase, unused, for future local runs.
 
 ---
 
@@ -30,7 +38,7 @@ A difficulty-stratified evaluation of **System-One decision models vs. frontier 
 | 6 | oos gold rows | **None.** oos is a prompt option only; false-abstention is measured, abstention-recall is deferred |
 | 7 | Prompt | 2 versions (V1 canonical, V2 rewording); definitions byte-identical; options in fixed alphabetical order |
 | 8 | Scoring | Final answer; trim→lowercase→strip quotes/punct→exact match vs 16 labels; else invalid = **wrong**; temperature 0 |
-| 9 | Roster | 5 System-One (local) + 5 LLMs (OpenRouter), incl. Gemma-4-31B |
+| 9 | Roster | 4 System-One (local) + Jev (TypeSafe hosted) + 5 LLMs (OpenRouter) |
 | 10 | Budget | Hard cap **$10**; expected $3–6; runner aborts past cap |
 | 11 | Harness | Built from scratch; Python 3.12; stdlib + `httpx` only; no frameworks |
 | 12 | Results | Append-only JSONL, resume-safe by `(run_id, case_id)`; MANIFEST with SHA-256s |
@@ -200,7 +208,7 @@ Answer with a single handler name and nothing else.
 | 1 | System-One | opendecider-nano (`manjunathshiva/opendecider-nano`) | local CPU | pip `opendecider` |
 | 2 | System-One | laya-421m typed-decisions (`convaiinnovations/laya`) | local CPU | pip `laya` |
 | 3 | System-One | decider-2b (`Mapika/decider-2b`) | local CPU | pip `decider-ai` |
-| 4 | System-One | lev (`interfaze-ai/lev`) | local CPU | pip `lev` (github.com/Abhinavexists/lev) |
+| 4 | System-One | Jev (`jev-1.13.0`, TypeSafe hosted) | hosted API | TypeSafe key (official endpoint) |
 | 5 | System-One | von (`wfzyx/von`, von-1.3.0) | local CPU | pip `von` (von-sdk) |
 | 6 | LLM | GPT-6.1 Sol, Max Effort | OpenRouter | API |
 | 7 | LLM | Claude 5.5 Opus Thinking, Max Effort | OpenRouter | API |
@@ -209,7 +217,7 @@ Answer with a single handler name and nothing else.
 | 10 | LLM | Gemma-4-31B-it | OpenRouter | API |
 
 - Leaderboard names are display names; **verify exact OpenRouter model slugs at setup** and record the served ID + date in the MANIFEST.
-- Rationale (one line each, for the writeup): 5 S1 models = the open System-One class with published/verified runtimes; the 4 API LLMs = one per major lab at high-reasoning settings (frontier anchor); Gemma-4-31B-it = the open-weights LLM, size-matched to the variant mandated by the Kaggle Gemma 4 Developer Agent Competition (`gemma-4-31b-it-qat-w4a16-ct`), served via OpenRouter (amended 2026-10-09; was local 12B — see Amendment note).
+- Rationale (one line each, for the writeup): 4 open S1 models = the open System-One class with published/verified runtimes; Jev = the hosted original that defines the class — the anchor comparison the MVP exists to make (amended 2026-10-10, replaces local lev: slowest S1 at ~60 s/call); the 4 API LLMs = one per major lab at high-reasoning settings (frontier anchor); Gemma-4-31B-it = the open-weights LLM, size-matched to the variant mandated by the Kaggle Gemma 4 Developer Agent Competition (`gemma-4-31b-it-qat-w4a16-ct`), served via OpenRouter (amended 2026-10-09; was local 12B — see Amendment note).
 
 ### 7.2 Adapter contract (every contestant implements exactly this)
 
@@ -270,7 +278,7 @@ tierline_mvp/
 ## 10. Environment & setup checklist (execute before Session 1)
 
 1. **Python 3.12** venv; `pip install httpx pytest`.
-2. **System-One packages:** `pip install laya opendecider decider-ai lev von` (weights download on first use; verify each imports and answers one smoke row).
+2. **System-One packages:** `pip install laya opendecider decider-ai von` (weights download on first use; verify each imports and answers one smoke row). `lev` was dropped from the roster by the 2026-10-10 amendment (replaced by hosted Jev) — its package/adapter remain available but unused. Jev needs no local install: `JEV_API_KEY` env var (or `.env`) against `https://api.typesafe.ai/v1/systemone`.
 3. ~~Gemma-4-12B-it (MLX 4-bit) in LM Studio~~ — **obsolete after the 2026-10-09 amendment:** Gemma runs via OpenRouter (§7.1 row 10); no local server needed. (The LM Studio single-worker note still applies to any future local LLM.)
 4. **OpenRouter account** → API key → env var `OPENROUTER_API_KEY`. Verify each of the 4 model slugs resolves with a 1-token call; record served IDs and prices in `results/MANIFEST.json`.
 5. **Download artifacts** (§4.1) into `data/sources/`; verify SHA-256 of `data_full.json` against the value in §4.1.
