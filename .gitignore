@@ -1,0 +1,11 @@
+# Files and directories that are never part of the repo
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Secrets (design doc §10: env vars only, never committed)
+.env
+
+# Source artifacts are reproducible via scripts/fetch_sources.py (~25 MB)
+data/sources/

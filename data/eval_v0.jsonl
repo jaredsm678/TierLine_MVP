@@ -1,0 +1,150 @@
+{"row_id": "bnk-0001", "split_source": "test", "intent": "account_blocked", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "there seems to be an issue with my account"}
+{"row_id": "bnk-0002", "split_source": "test", "intent": "account_blocked", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "can you help me unblock my account"}
+{"row_id": "bnk-0003", "split_source": "test", "intent": "account_blocked", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "did someone who is unauthorized try to get into my bank account"}
+{"row_id": "bnk-0004", "split_source": "test", "intent": "account_blocked", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "can you check what the problem with my account is, it seems to b e blocked"}
+{"row_id": "bnk-0005", "split_source": "test", "intent": "account_blocked", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "is there a problem with my account, it appears to be blocked"}
+{"row_id": "bnk-0006", "split_source": "test", "intent": "balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what are my coffers at"}
+{"row_id": "bnk-0007", "split_source": "test", "intent": "balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what's my checking look like"}
+{"row_id": "bnk-0008", "split_source": "test", "intent": "balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "check my wells fargo account to see if i have enough for these nike's"}
+{"row_id": "bnk-0009", "split_source": "test", "intent": "balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "whats my bank accounts look like"}
+{"row_id": "bnk-0010", "split_source": "test", "intent": "balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i want some nike's, is there enough in my wells fargo account"}
+{"row_id": "bnk-0011", "split_source": "test", "intent": "bill_balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "how expensive is my internet"}
+{"row_id": "bnk-0012", "split_source": "test", "intent": "bill_balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i need to know the price of my car payment and insurance please"}
+{"row_id": "bnk-0013", "split_source": "test", "intent": "bill_balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what will i be paying for utilities this month"}
+{"row_id": "bnk-0014", "split_source": "test", "intent": "bill_balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i think all my bills are paid, but can you double check"}
+{"row_id": "bnk-0015", "split_source": "test", "intent": "bill_balance", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "is the phone bill the same as last month"}
+{"row_id": "bnk-0016", "split_source": "test", "intent": "bill_due", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "when does the current billing cycle end"}
+{"row_id": "bnk-0017", "split_source": "test", "intent": "bill_due", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i need to know the next billing date of my american express card"}
+{"row_id": "bnk-0018", "split_source": "test", "intent": "bill_due", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what day of the month do i have to pay my mortgage"}
+{"row_id": "bnk-0019", "split_source": "test", "intent": "bill_due", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i want to know when the deadline is to pay my car loan"}
+{"row_id": "bnk-0020", "split_source": "test", "intent": "bill_due", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what's the due date for my netflix subscription"}
+{"row_id": "bnk-0021", "split_source": "test", "intent": "freeze_account", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "block my american saving bank for now"}
+{"row_id": "bnk-0022", "split_source": "test", "intent": "freeze_account", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i want my account locked out"}
+{"row_id": "bnk-0023", "split_source": "test", "intent": "freeze_account", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "my account needs to be frozen"}
+{"row_id": "bnk-0024", "split_source": "test", "intent": "freeze_account", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i need to lock my account right now!"}
+{"row_id": "bnk-0025", "split_source": "test", "intent": "freeze_account", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "block my bank of america immdediately"}
+{"row_id": "bnk-0026", "split_source": "test", "intent": "interest_rate", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what's the apr on my savings account"}
+{"row_id": "bnk-0027", "split_source": "test", "intent": "interest_rate", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what does chase pay in interest per year"}
+{"row_id": "bnk-0028", "split_source": "test", "intent": "interest_rate", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "where do i see what interest my mortgage has"}
+{"row_id": "bnk-0029", "split_source": "test", "intent": "interest_rate", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "how much interest is my nfcu accrueing"}
+{"row_id": "bnk-0030", "split_source": "test", "intent": "interest_rate", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what amount of interest does my checking account at chase earn"}
+{"row_id": "bnk-0031", "split_source": "test", "intent": "min_payment", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "if i wanted to spend the lowest for my electric bill, then how much would it be"}
+{"row_id": "bnk-0032", "split_source": "test", "intent": "min_payment", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what's the least i can pay this month"}
+{"row_id": "bnk-0033", "split_source": "test", "intent": "min_payment", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "look up the lowest amount i can pay on my electricity bill"}
+{"row_id": "bnk-0034", "split_source": "test", "intent": "min_payment", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what is the lowest amount i must pay on my verizon bill"}
+{"row_id": "bnk-0035", "split_source": "test", "intent": "min_payment", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "do you know the smallest amount i can pay on my water bill"}
+{"row_id": "bnk-0036", "split_source": "test", "intent": "order_checks", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "can you overnight me a few checkbooks"}
+{"row_id": "bnk-0037", "split_source": "test", "intent": "order_checks", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i am in need of new checks i'm completely out of mine"}
+{"row_id": "bnk-0038", "split_source": "test", "intent": "order_checks", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i need more checkbooks mailed as soon as possible"}
+{"row_id": "bnk-0039", "split_source": "test", "intent": "order_checks", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "can i get some new checks i'm out of mine"}
+{"row_id": "bnk-0040", "split_source": "test", "intent": "order_checks", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what do i do to order new checkbooks for my well's fargo account"}
+{"row_id": "bnk-0041", "split_source": "test", "intent": "pay_bill", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i have a car payment that needs to be paid"}
+{"row_id": "bnk-0042", "split_source": "test", "intent": "pay_bill", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i need a hand getting this gas bill paid"}
+{"row_id": "bnk-0043", "split_source": "test", "intent": "pay_bill", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "today my electric bill will be paid, or should be"}
+{"row_id": "bnk-0044", "split_source": "test", "intent": "pay_bill", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i need some assistance paying my utilities bill"}
+{"row_id": "bnk-0045", "split_source": "test", "intent": "pay_bill", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "my electric bill should be paid today"}
+{"row_id": "bnk-0046", "split_source": "test", "intent": "pin_change", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i would like to change the name on my first bankcard account"}
+{"row_id": "bnk-0047", "split_source": "test", "intent": "pin_change", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i would like to change the name on my first hawaiian bank account"}
+{"row_id": "bnk-0048", "split_source": "test", "intent": "pin_change", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i would like to change the name on my capital one account"}
+{"row_id": "bnk-0049", "split_source": "test", "intent": "pin_change", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "change the code of my savings account to be 1234"}
+{"row_id": "bnk-0050", "split_source": "test", "intent": "pin_change", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i would like to change the name on my credit card account"}
+{"row_id": "bnk-0051", "split_source": "test", "intent": "report_fraud", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i don't remember buying this"}
+{"row_id": "bnk-0052", "split_source": "test", "intent": "report_fraud", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "my bill shows a purchase from payless shoes but i didn't buy anything"}
+{"row_id": "bnk-0053", "split_source": "test", "intent": "report_fraud", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "my online bill has some items that i didn't purchase from penneys"}
+{"row_id": "bnk-0054", "split_source": "test", "intent": "report_fraud", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "this charge is bs"}
+{"row_id": "bnk-0055", "split_source": "test", "intent": "report_fraud", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "someone else used my account to buy stuff from mcdonald's"}
+{"row_id": "bnk-0056", "split_source": "test", "intent": "routing", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "where would century bank have their routing number listed"}
+{"row_id": "bnk-0057", "split_source": "test", "intent": "routing", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "where do i go if i am seeking the routing number of dallas capital"}
+{"row_id": "bnk-0058", "split_source": "test", "intent": "routing", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what is the location that td bank has their routing number listed"}
+{"row_id": "bnk-0059", "split_source": "test", "intent": "routing", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "tell me my routing number at my bank, community trust"}
+{"row_id": "bnk-0060", "split_source": "test", "intent": "routing", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "give me the routing number of my checking account at my main bank, first commerce"}
+{"row_id": "bnk-0061", "split_source": "test", "intent": "spending_history", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "do i overspend when it comes to fast food"}
+{"row_id": "bnk-0062", "split_source": "test", "intent": "spending_history", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "have i gone over my entertainment budget"}
+{"row_id": "bnk-0063", "split_source": "test", "intent": "spending_history", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "did i stick to my dinner budget"}
+{"row_id": "bnk-0064", "split_source": "test", "intent": "spending_history", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "have i gone over my chocolate budget lately"}
+{"row_id": "bnk-0065", "split_source": "test", "intent": "spending_history", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what are my finances like lately"}
+{"row_id": "bnk-0066", "split_source": "test", "intent": "transactions", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "what have i spent things on"}
+{"row_id": "bnk-0067", "split_source": "test", "intent": "transactions", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "is my visa bill over my limit this month"}
+{"row_id": "bnk-0068", "split_source": "test", "intent": "transactions", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "when did i last make a purchase"}
+{"row_id": "bnk-0069", "split_source": "test", "intent": "transactions", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "how much was my last target trip"}
+{"row_id": "bnk-0070", "split_source": "test", "intent": "transactions", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "how much have i spent on my debit card this month"}
+{"row_id": "bnk-0071", "split_source": "test", "intent": "transfer", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "repeat what the weather will be like"}
+{"row_id": "bnk-0072", "split_source": "test", "intent": "transfer", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i would like help moving money between accounts"}
+{"row_id": "bnk-0073", "split_source": "test", "intent": "transfer", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "can i move some money around"}
+{"row_id": "bnk-0074", "split_source": "test", "intent": "transfer", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "i would like to distribute some money between my accounts"}
+{"row_id": "bnk-0075", "split_source": "test", "intent": "transfer", "difficulty": "difficult", "source": "ibm_tfidf_testset", "text": "can i move some money between my two accounts"}
+{"row_id": "bnk-0076", "split_source": "test", "intent": "account_blocked", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "why is my bank account locked"}
+{"row_id": "bnk-0077", "split_source": "test", "intent": "account_blocked", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how did my bank account get frozen"}
+{"row_id": "bnk-0078", "split_source": "test", "intent": "account_blocked", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "why did my bank place a hold on my bank account"}
+{"row_id": "bnk-0079", "split_source": "test", "intent": "account_blocked", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "check to see why us bank placed a hold on my account"}
+{"row_id": "bnk-0080", "split_source": "test", "intent": "account_blocked", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "why can't i access my chase account"}
+{"row_id": "bnk-0081", "split_source": "test", "intent": "balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what's the balance in my bank accounts"}
+{"row_id": "bnk-0082", "split_source": "test", "intent": "balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what do i have in my bank accounts right now"}
+{"row_id": "bnk-0083", "split_source": "test", "intent": "balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "do i have money in my wells fargo account for nike's"}
+{"row_id": "bnk-0084", "split_source": "test", "intent": "balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "tell me the current account balance"}
+{"row_id": "bnk-0085", "split_source": "test", "intent": "balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how much do i have left in my checking account"}
+{"row_id": "bnk-0086", "split_source": "test", "intent": "bill_balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how much do i owe visa"}
+{"row_id": "bnk-0087", "split_source": "test", "intent": "bill_balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what are my bills this month"}
+{"row_id": "bnk-0088", "split_source": "test", "intent": "bill_balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what are my total bills this month"}
+{"row_id": "bnk-0089", "split_source": "test", "intent": "bill_balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how much is my telephone bill this month"}
+{"row_id": "bnk-0090", "split_source": "test", "intent": "bill_balance", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how much is the car bill this month"}
+{"row_id": "bnk-0091", "split_source": "test", "intent": "bill_due", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "when is my electric bill due by"}
+{"row_id": "bnk-0092", "split_source": "test", "intent": "bill_due", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "when is my car insurance bill due"}
+{"row_id": "bnk-0093", "split_source": "test", "intent": "bill_due", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how long until my water bill is due"}
+{"row_id": "bnk-0094", "split_source": "test", "intent": "bill_due", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "where can i see the due date for auto loan bill"}
+{"row_id": "bnk-0095", "split_source": "test", "intent": "bill_due", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "when is my cell phone due"}
+{"row_id": "bnk-0096", "split_source": "test", "intent": "freeze_account", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "can you freeze my bank account"}
+{"row_id": "bnk-0097", "split_source": "test", "intent": "freeze_account", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "please allow my account to freeze"}
+{"row_id": "bnk-0098", "split_source": "test", "intent": "freeze_account", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "could you please put a stop on my bank account"}
+{"row_id": "bnk-0099", "split_source": "test", "intent": "freeze_account", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i need to put a stop on my bank account"}
+{"row_id": "bnk-0100", "split_source": "test", "intent": "freeze_account", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "please put a stop on my bank account"}
+{"row_id": "bnk-0101", "split_source": "test", "intent": "interest_rate", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how can i tell what the interest rate on my money market account is"}
+{"row_id": "bnk-0102", "split_source": "test", "intent": "interest_rate", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i need my checking account's interest rate"}
+{"row_id": "bnk-0103", "split_source": "test", "intent": "interest_rate", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "can i get the interest rate for my checking account"}
+{"row_id": "bnk-0104", "split_source": "test", "intent": "interest_rate", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what's my savings account interest rate"}
+{"row_id": "bnk-0105", "split_source": "test", "intent": "interest_rate", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what amount of interest does my checking account earn"}
+{"row_id": "bnk-0106", "split_source": "test", "intent": "min_payment", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i must pay verizon what minimum amount on my bill"}
+{"row_id": "bnk-0107", "split_source": "test", "intent": "min_payment", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what is the lowest amount i can pay for my cellphone bill"}
+{"row_id": "bnk-0108", "split_source": "test", "intent": "min_payment", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what is the minimum i can pay on my electric bill"}
+{"row_id": "bnk-0109", "split_source": "test", "intent": "min_payment", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what is the minimum i can pay on my cell phone bill"}
+{"row_id": "bnk-0110", "split_source": "test", "intent": "min_payment", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what is the minimum payment on my water bill"}
+{"row_id": "bnk-0111", "split_source": "test", "intent": "order_checks", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how do i order some checkbooks for my chase account"}
+{"row_id": "bnk-0112", "split_source": "test", "intent": "order_checks", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "for my chase account can i order some checkbooks"}
+{"row_id": "bnk-0113", "split_source": "test", "intent": "order_checks", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "send me more checkbooks please"}
+{"row_id": "bnk-0114", "split_source": "test", "intent": "order_checks", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how do i order some more checks for my bank of the west account"}
+{"row_id": "bnk-0115", "split_source": "test", "intent": "order_checks", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "do you know how i order more checks for my well's fargo account"}
+{"row_id": "bnk-0116", "split_source": "test", "intent": "pay_bill", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "use my navy federal account and pay this month's verizon bill, please"}
+{"row_id": "bnk-0117", "split_source": "test", "intent": "pay_bill", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "please pay my sprint bill using my bank of america checking account"}
+{"row_id": "bnk-0118", "split_source": "test", "intent": "pay_bill", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i have to pay my water bill but need help doing it"}
+{"row_id": "bnk-0119", "split_source": "test", "intent": "pay_bill", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i want to pay my bill through the app"}
+{"row_id": "bnk-0120", "split_source": "test", "intent": "pay_bill", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i'd like to pay $4735 to my water bill"}
+{"row_id": "bnk-0121", "split_source": "test", "intent": "pin_change", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "the pin number to my card has been forgotten"}
+{"row_id": "bnk-0122", "split_source": "test", "intent": "pin_change", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i don't remember the pin number to my card"}
+{"row_id": "bnk-0123", "split_source": "test", "intent": "pin_change", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "make my pin 1234 for my checking account"}
+{"row_id": "bnk-0124", "split_source": "test", "intent": "pin_change", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "go my to checking account and switch my pin to 1234"}
+{"row_id": "bnk-0125", "split_source": "test", "intent": "pin_change", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "does my checking account have a pin number"}
+{"row_id": "bnk-0126", "split_source": "test", "intent": "report_fraud", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i would like to report fraudulent activity on my chase card"}
+{"row_id": "bnk-0127", "split_source": "test", "intent": "report_fraud", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i have a bogus transaction from amazon on my account"}
+{"row_id": "bnk-0128", "split_source": "test", "intent": "report_fraud", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "do i have a fraudulent transaction on my account"}
+{"row_id": "bnk-0129", "split_source": "test", "intent": "report_fraud", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i think there's a fraudulent charge from mcdonald's on my account"}
+{"row_id": "bnk-0130", "split_source": "test", "intent": "report_fraud", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "who do i contact to report fraud on my visa"}
+{"row_id": "bnk-0131", "split_source": "test", "intent": "routing", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what is the routing number of my checking account at first national bankj"}
+{"row_id": "bnk-0132", "split_source": "test", "intent": "routing", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what is my bank routing number"}
+{"row_id": "bnk-0133", "split_source": "test", "intent": "routing", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "where can i find wells fargo's routing number"}
+{"row_id": "bnk-0134", "split_source": "test", "intent": "routing", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "is my routing number on my account page"}
+{"row_id": "bnk-0135", "split_source": "test", "intent": "routing", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "can you tell me the routing number to pnc"}
+{"row_id": "bnk-0136", "split_source": "test", "intent": "spending_history", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how much total have i spent on fast food lately"}
+{"row_id": "bnk-0137", "split_source": "test", "intent": "spending_history", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how much money did i spend this weekend"}
+{"row_id": "bnk-0138", "split_source": "test", "intent": "spending_history", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how much have i spent this week"}
+{"row_id": "bnk-0139", "split_source": "test", "intent": "spending_history", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "about how much did i spend recently"}
+{"row_id": "bnk-0140", "split_source": "test", "intent": "spending_history", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "tell me how much i have been buying as of late"}
+{"row_id": "bnk-0141", "split_source": "test", "intent": "transactions", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how much did i spend on my most recent transaction"}
+{"row_id": "bnk-0142", "split_source": "test", "intent": "transactions", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "show me my ten most recent transactions on account xyz"}
+{"row_id": "bnk-0143", "split_source": "test", "intent": "transactions", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i made a transaction recently"}
+{"row_id": "bnk-0144", "split_source": "test", "intent": "transactions", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "how many transactions do i have on flower shops from last wednesday between 2pm and 7pm"}
+{"row_id": "bnk-0145", "split_source": "test", "intent": "transactions", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "what transactions did i make on electronics this morning after 6am"}
+{"row_id": "bnk-0146", "split_source": "test", "intent": "transfer", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i would like help moving money from one account to another"}
+{"row_id": "bnk-0147", "split_source": "test", "intent": "transfer", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "i would like assistance moving money from one account to another"}
+{"row_id": "bnk-0148", "split_source": "test", "intent": "transfer", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "help me transfer $100 from my checking to saving account"}
+{"row_id": "bnk-0149", "split_source": "test", "intent": "transfer", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "can you please help me move $100 from my checking to saving account"}
+{"row_id": "bnk-0150", "split_source": "test", "intent": "transfer", "difficulty": "non_difficult", "source": "clinc_test_random", "text": "transer $800 from my checking to savings account"}

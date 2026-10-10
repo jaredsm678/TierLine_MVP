@@ -1,0 +1,14 @@
+[project]
+name = "tierline-mvp"
+version = "0.1.0"
+description = "Difficulty-stratified evaluation of System-One decision models vs. frontier LLMs on CLINC150 banking routing (MVP)."
+requires-python = ">=3.12"
+dependencies = ["httpx"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+# "scripts" is on the path so tests can import scripts/build_dataset.py directly.
+pythonpath = ["src", "scripts"]
+testpaths = ["tests"]

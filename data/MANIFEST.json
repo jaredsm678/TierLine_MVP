@@ -1,0 +1,151 @@
+{
+  "design_doc": "MVP_DESIGN_DOC.md v1.0 (2026-10-09)",
+  "eval_file": "data/eval_v0.jsonl",
+  "eval_sha256": "ac7a1d09b8b87780006c45d3223a03bcc185bb9737bfdd0f88ddbb516c5fbe99",
+  "eval_rows": 150,
+  "totals": {
+    "difficult": 75,
+    "non_difficult": 75
+  },
+  "row_counts_per_intent": {
+    "account_blocked": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "balance": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "bill_balance": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "bill_due": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "freeze_account": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "interest_rate": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "min_payment": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "order_checks": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "pay_bill": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "pin_change": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "report_fraud": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "routing": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "spending_history": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "transactions": {
+      "difficult": 5,
+      "non_difficult": 5
+    },
+    "transfer": {
+      "difficult": 5,
+      "non_difficult": 5
+    }
+  },
+  "sources": {
+    "data_full.json": {
+      "role": "CLINC150 utterances, intent labels, splits",
+      "url": "https://raw.githubusercontent.com/clinc/oos-eval/master/data/data_full.json",
+      "pinned_sha256": "36923c3705a59e08fe9c3883d8bc2dd966ef93e22cb78ac41171782a698d56e0",
+      "sha256": "36923c3705a59e08fe9c3883d8bc2dd966ef93e22cb78ac41171782a698d56e0",
+      "bytes": 2495390,
+      "matches_pin": true
+    },
+    "clinc150-tfidf-testset.tsv": {
+      "role": "IBM NAACL-Industry 2021 TF-IDF difficult test subset (750 rows)",
+      "url": "https://raw.githubusercontent.com/haodeqi/BenchmarkingIntentDetection/master/CLINC150/clinc150-tfidf-testset.tsv",
+      "pinned_sha256": null,
+      "sha256": "85f74602b093f9b738a9cca29162c5925223fcce066449e1086897cbc8529960",
+      "bytes": 39872,
+      "matches_pin": null
+    },
+    "domains.json": {
+      "role": "official CLINC150 intent->domain mapping (cross-check only; the 15 banking intents are frozen in this module)",
+      "url": "https://raw.githubusercontent.com/clinc/oos-eval/master/data/domains.json",
+      "pinned_sha256": null,
+      "sha256": "b947b579d3b8e74b06f93b01083d8efaff2888b43a3e362533bd88a6e1211b3a",
+      "bytes": 3818,
+      "matches_pin": null
+    }
+  },
+  "seed": 42,
+  "construction_code_version": "session-1/1",
+  "build_dataset_sha256": "eae5bdb615f6bf398f282bf2b9468e8570aa779db70dd0a46f6548b09842d782",
+  "generated_at_utc": "2026-10-10T05:25:03+00:00",
+  "python_version": "3.12.15",
+  "sampling_stats": {
+    "replacements_per_intent": {
+      "account_blocked": 0,
+      "balance": 0,
+      "bill_balance": 0,
+      "bill_due": 0,
+      "freeze_account": 0,
+      "interest_rate": 0,
+      "min_payment": 0,
+      "order_checks": 0,
+      "pay_bill": 0,
+      "pin_change": 0,
+      "report_fraud": 0,
+      "routing": 0,
+      "spending_history": 0,
+      "transactions": 0,
+      "transfer": 0
+    },
+    "extra_pool_exclusions_per_intent": {
+      "account_blocked": 0,
+      "balance": 0,
+      "bill_balance": 0,
+      "bill_due": 0,
+      "freeze_account": 0,
+      "interest_rate": 0,
+      "min_payment": 0,
+      "order_checks": 0,
+      "pay_bill": 0,
+      "pin_change": 0,
+      "report_fraud": 0,
+      "routing": 0,
+      "spending_history": 0,
+      "transactions": 0,
+      "transfer": 0
+    },
+    "total_replacements": 0
+  },
+  "clinc_test_report": {
+    "multi_occurrence_difficult_texts": {}
+  },
+  "notes": [
+    "Row order: all difficult rows first (intents in frozen alphabetical option order; TSV file order within intent), then non-difficult rows (intents alphabetical; original CLINC test-file order within intent). row_id reflects this order.",
+    "Non-difficult sampling consumes one shared random.Random(42) across intents, processed in frozen alphabetical option order; candidates are in original file order (§4.3.5).",
+    "Dedup (§4.3.6) is global: a sampled row is rejected if its normalized text (lowercase, punctuation/whitespace stripped, plus common unicode quotes/dashes) matches a difficult row or any previously accepted row; keep-first in draw order; replacements drawn one at a time from the same intent's remaining pool with the same RNG.",
+    "All test rows whose text equals a difficult utterance are excluded from the non-difficult pool; counts beyond the canonical 5 per intent are in sampling_stats.extra_pool_exclusions_per_intent.",
+    "Definitions are stored as single logical lines (the doc hard-wraps §5 for display) and markdown backticks around intent names are dropped; see tierline_mvp/schema.py.",
+    "domains.json present; banking intent cross-check passed"
+  ]
+}
