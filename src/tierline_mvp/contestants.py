@@ -71,6 +71,19 @@ OPENROUTER_MODELS: dict[str, dict] = {
         "price_prompt_per_1m_usd": 0.64,
         "price_completion_per_1m_usd": 13.50,
     },
+    "gemma-4-31b": {
+        # Amended 2026-10-09: was a local Gemma-4-12B (4-bit MLX via LM Studio).
+        # google/gemma-4-31b-it is size-matched to the variant mandated by the
+        # Kaggle Gemma 4 Developer Agent Competition (gemma-4-31b-it-qat-w4a16-ct).
+        # This model supports `reasoning` but not `reasoning_effort`, so no
+        # effort parameter is sent (reasoning_effort=None).
+        "display_name": "Gemma-4-31B-it",
+        "slug": "google/gemma-4-31b-it",
+        "reasoning_effort": None,
+        "max_tokens": 2048,
+        "price_prompt_per_1m_usd": 0.09,
+        "price_completion_per_1m_usd": 0.34,
+    },
 }
 
 RESULT_KEYS = ("label", "probs", "latency_ms", "cost_usd", "raw", "error")
@@ -405,14 +418,15 @@ def _json(obj) -> str:
     return json.dumps(obj, ensure_ascii=False, default=str)
 
 
-# Roster keys beyond the OpenRouter table (§7.1 rows 1-5 and row 10).
+# Roster keys beyond the OpenRouter table (§7.1 rows 1-5).
+# (Row 10, Gemma, moved to the OpenRouter table by the 2026-10-09 amendment;
+# LocalOpenAIContestant stays available for any future local LLM.)
 LOCAL_CONTESTANT_KEYS = (
     "opendecider-nano",
     "laya-421m",
     "decider-2b",
     "lev",
     "von",
-    "gemma-4-12b",
 )
 
 
@@ -420,9 +434,6 @@ def build_contestant(key: str, client: httpx.Client | None = None) -> Contestant
     """Instantiate an adapter by roster key (all ten contestants, §7.1)."""
     if key in OPENROUTER_MODELS:
         return OpenRouterContestant(key, client=client)
-    if key == "gemma-4-12b":
-        # Served model id verified against LM Studio's /v1/models at smoke time.
-        return LocalOpenAIContestant(name="Gemma-4-12B-it, 4-bit MLX", slug="gemma-4-12b-it")
     if key == "opendecider-nano":
         return OpenDeciderContestant()
     if key == "laya-421m":
@@ -435,3 +446,7 @@ def build_contestant(key: str, client: httpx.Client | None = None) -> Contestant
         return VonContestant()
     raise KeyError(f"unknown contestant {key!r}; known: "
                    f"{sorted(list(OPENROUTER_MODELS) + list(LOCAL_CONTESTANT_KEYS))}")
+
+
+#: All ten roster keys (§7.1).
+ALL_CONTESTANT_KEYS = tuple(OPENROUTER_MODELS) + LOCAL_CONTESTANT_KEYS

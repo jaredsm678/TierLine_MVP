@@ -3,6 +3,12 @@
 **Version:** 1.0 · **Date:** 2026-10-09 · **Owner:** Jared Santamaria
 **Purpose:** This document is the complete, self-contained specification for building the TierLine MVP. It is written so that a fresh conversation in an empty repository can implement the entire MVP from this file alone, with no other context.
 **Status:** All decisions below are LOCKED. Anything marked POST-MVP is explicitly out of scope.
+**Amendment (2026-10-09, session 4):** Roster row 10 changed by owner decision — Gemma moves from the
+local LM Studio build (Gemma-4-12B-it, 4-bit MLX) to the OpenRouter-hosted `google/gemma-4-31b-it`.
+Rationale: the Kaggle Gemma competition (Gemma 4 Developer Agent Competition) mandates
+`gemma-4-31b-it-qat-w4a16-ct` — a 31B-it QAT quantization — so the doc's original 12B pick never
+matched the referenced competition; 31B-it does. Quantization/serving-stack differences vs the
+competition's W4A16 build are disclosed.
 
 ---
 
@@ -24,7 +30,7 @@ A difficulty-stratified evaluation of **System-One decision models vs. frontier 
 | 6 | oos gold rows | **None.** oos is a prompt option only; false-abstention is measured, abstention-recall is deferred |
 | 7 | Prompt | 2 versions (V1 canonical, V2 rewording); definitions byte-identical; options in fixed alphabetical order |
 | 8 | Scoring | Final answer; trim→lowercase→strip quotes/punct→exact match vs 16 labels; else invalid = **wrong**; temperature 0 |
-| 9 | Roster | 5 System-One (local) + 4 LLMs (OpenRouter) + 1 LLM (local Gemma-4-12B) |
+| 9 | Roster | 5 System-One (local) + 5 LLMs (OpenRouter), incl. Gemma-4-31B |
 | 10 | Budget | Hard cap **$10**; expected $3–6; runner aborts past cap |
 | 11 | Harness | Built from scratch; Python 3.12; stdlib + `httpx` only; no frameworks |
 | 12 | Results | Append-only JSONL, resume-safe by `(run_id, case_id)`; MANIFEST with SHA-256s |
@@ -200,10 +206,10 @@ Answer with a single handler name and nothing else.
 | 7 | LLM | Claude 5.5 Opus Thinking, Max Effort | OpenRouter | API |
 | 8 | LLM | Kimi K3 | OpenRouter | API |
 | 9 | LLM | Gemini 3.8 Flash, High | OpenRouter | API |
-| 10 | LLM | Gemma-4-12B-it, 4-bit MLX | local, LM Studio | local server (OpenAI-compatible) |
+| 10 | LLM | Gemma-4-31B-it | OpenRouter | API |
 
 - Leaderboard names are display names; **verify exact OpenRouter model slugs at setup** and record the served ID + date in the MANIFEST.
-- Rationale (one line each, for the writeup): 5 S1 models = the open System-One class with published/verified runtimes; the 4 API LLMs = one per major lab at high-reasoning settings (frontier anchor); Gemma-4-12B = the open-weights local LLM, tied to the Kaggle Gemma competition.
+- Rationale (one line each, for the writeup): 5 S1 models = the open System-One class with published/verified runtimes; the 4 API LLMs = one per major lab at high-reasoning settings (frontier anchor); Gemma-4-31B-it = the open-weights LLM, size-matched to the variant mandated by the Kaggle Gemma 4 Developer Agent Competition (`gemma-4-31b-it-qat-w4a16-ct`), served via OpenRouter (amended 2026-10-09; was local 12B — see Amendment note).
 
 ### 7.2 Adapter contract (every contestant implements exactly this)
 
@@ -265,7 +271,7 @@ tierline_mvp/
 
 1. **Python 3.12** venv; `pip install httpx pytest`.
 2. **System-One packages:** `pip install laya opendecider decider-ai lev von` (weights download on first use; verify each imports and answers one smoke row).
-3. **Gemma-4-12B-it (MLX 4-bit) in LM Studio:** load model, start local server (OpenAI-compatible endpoint, default `http://localhost:1234/v1`), confirm with a 1-token ping. Note: run local LLM inference with a single worker (concurrent requests have wedged LM Studio queues before).
+3. ~~Gemma-4-12B-it (MLX 4-bit) in LM Studio~~ — **obsolete after the 2026-10-09 amendment:** Gemma runs via OpenRouter (§7.1 row 10); no local server needed. (The LM Studio single-worker note still applies to any future local LLM.)
 4. **OpenRouter account** → API key → env var `OPENROUTER_API_KEY`. Verify each of the 4 model slugs resolves with a 1-token call; record served IDs and prices in `results/MANIFEST.json`.
 5. **Download artifacts** (§4.1) into `data/sources/`; verify SHA-256 of `data_full.json` against the value in §4.1.
 6. Write `data/eval_v0.jsonl` + `MANIFEST.json` per §4.3; assert 150 rows, 15 intents × (5 difficult + 5 non-difficult).

@@ -37,10 +37,13 @@ def test_charge_accumulates_and_counts():
     assert meter.calls == 2
 
 
-def test_all_four_openrouter_models_configured():
+def test_all_five_openrouter_models_configured():
     expected_keys = {"gemini-3.8-flash", "gpt-6.1-sol",
-                     "claude-5.5-opus-thinking", "kimi-k3"}
+                     "claude-5.5-opus-thinking", "kimi-k3", "gemma-4-31b"}
     assert set(contestants.OPENROUTER_MODELS) == expected_keys
+    assert set(contestants.LOCAL_CONTESTANT_KEYS) == {
+        "opendecider-nano", "laya-421m", "decider-2b", "lev", "von"}
+    assert len(contestants.ALL_CONTESTANT_KEYS) == 10
 
 
 def test_model_entries_are_wellformed():
@@ -63,6 +66,7 @@ def test_display_names_match_design_doc_roster():
         "GPT-6.1 Sol, Max Effort",
         "Claude 5.5 Opus Thinking, Max Effort",
         "Kimi K3",
+        "Gemma-4-31B-it",
     }
 
 
@@ -73,4 +77,5 @@ def test_reasoning_efforts_recorded():
         "gpt-6.1-sol": "max",
         "claude-5.5-opus-thinking": "max",
         "kimi-k3": "high",
+        "gemma-4-31b": None,  # model supports `reasoning` but not `reasoning_effort`
     }

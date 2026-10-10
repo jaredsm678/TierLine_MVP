@@ -32,8 +32,7 @@ from tierline_mvp import contestants, runner, schema, scoring  # noqa: E402
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--model", default="gemini-3.8-flash",
-                    choices=sorted(list(contestants.OPENROUTER_MODELS)
-                                   + list(contestants.LOCAL_CONTESTANT_KEYS)))
+                    choices=sorted(contestants.ALL_CONTESTANT_KEYS))
     ap.add_argument("--version", default="V1", choices=("V1", "V2"))
     ap.add_argument("--rows", type=int, default=5)
     ap.add_argument("--cap-usd", type=float, default=None,
