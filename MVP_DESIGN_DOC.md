@@ -17,6 +17,22 @@ S1-class comparison. Jev runs V1-only like all S1 contestants (§6.2); access vi
 official endpoint with the owner's key; published price $0.042/M input tokens (output free);
 served version pinned and recorded in the run records. The lev package and adapter remain in the
 codebase, unused, for future local runs.
+**Amendment (2026-10-10, session 5b):** S1 roster upgraded to "best per maker per posted
+benchmarks" (owner decision, same selection logic as the LiveBench-driven LLM picks — external
+rankings fixed before running). Changes: decider-2b → **decider-4b v2.1** (JevBench 71.3 vs 45.1);
+opendecider-nano → **opendecider-small-mlx-8bit** (maker's best, Mac-native MLX); added
+**Winnow-12B Q8** (EldanRing; JevBench #2 overall; Gemma-4-12B-it fine-tune; native /v1/systemone
+llama.cpp server, Apple Silicon Metal source build) and **bekko-system-one-v0-400m** (S1MB #2;
+encoder; no CLINC training overlap per its SOURCES.md; author-disclosed generalization limits
+behind its v0 designation). **Cygnet** (JevBench #1 in v1.5.4 — stock Gemma-4-12B-it on vLLM with
+a letter-readout shim) is excluded: the published recipe needs 48GB GPUs, not Mac-feasible;
+disclosed. **Winnow hardware substitution (2026-10-10):** the 12B Q8 build exceeded this 16GB
+Mac's default Metal wired-GPU limit (kIOGPUCommandBufferCallbackErrorOutOfMemory at first
+inference; raising it requires sudo), so the maker's **E4B Q8** variant of the same Winnow
+fine-tune (Gemma-4 E4B base, 8.4–10.4 GiB profile) ran instead — hardware-driven substitution,
+disclosed; 12B numbers are not substituted for it. laya-421m and von (S1MB #19/#17 — their makers' entries, independently weak) plus the
+displaced decider-2b and opendecider-nano move to a disclosed secondary table; their measured
+results are retained and reported. All S1 slots run V1-only (§6.2).
 
 ---
 
@@ -38,7 +54,7 @@ A difficulty-stratified evaluation of **System-One decision models vs. frontier 
 | 6 | oos gold rows | **None.** oos is a prompt option only; false-abstention is measured, abstention-recall is deferred |
 | 7 | Prompt | 2 versions (V1 canonical, V2 rewording); definitions byte-identical; options in fixed alphabetical order |
 | 8 | Scoring | Final answer; trim→lowercase→strip quotes/punct→exact match vs 16 labels; else invalid = **wrong**; temperature 0 |
-| 9 | Roster | 4 System-One (local) + Jev (TypeSafe hosted) + 5 LLMs (OpenRouter) |
+| 9 | Roster | 5 System-One (benchmark-selected: Jev hosted + 4 local) + 5 LLMs (OpenRouter) |
 | 10 | Budget | Hard cap **$10**; expected $3–6; runner aborts past cap |
 | 11 | Harness | Built from scratch; Python 3.12; stdlib + `httpx` only; no frameworks |
 | 12 | Results | Append-only JSONL, resume-safe by `(run_id, case_id)`; MANIFEST with SHA-256s |
@@ -205,11 +221,11 @@ Answer with a single handler name and nothing else.
 
 | # | Class | Model | Where | Access |
 |---|---|---|---|---|
-| 1 | System-One | opendecider-nano (`manjunathshiva/opendecider-nano`) | local CPU | pip `opendecider` |
-| 2 | System-One | laya-421m typed-decisions (`convaiinnovations/laya`) | local CPU | pip `laya` |
-| 3 | System-One | decider-2b (`Mapika/decider-2b`) | local CPU | pip `decider-ai` |
-| 4 | System-One | Jev (`jev-1.13.0`, TypeSafe hosted) | hosted API | TypeSafe key (official endpoint) |
-| 5 | System-One | von (`wfzyx/von`, von-1.3.0) | local CPU | pip `von` (von-sdk) |
+| 1 | System-One | Jev (`jev-1.13.0`, TypeSafe hosted) | hosted API | TypeSafe key (official endpoint) |
+| 2 | System-One | Winnow-E4B Q8 (EldanRing; Gemma-4 E4B FT) | local llama.cpp/Metal | winnow-inference |
+| 3 | System-One | decider-4b v2.1 (`Mapika/decider-4b`) | local CPU | pip `decider-ai` |
+| 4 | System-One | bekko-system-one-v0-400m (hotchpotch) | local CPU | HF trust_remote_code |
+| 5 | System-One | opendecider-small-mlx-8bit (`manjunathshiva`) | local MLX | pip `opendecider[mlx]` |
 | 6 | LLM | GPT-6.1 Sol, Max Effort | OpenRouter | API |
 | 7 | LLM | Claude 5.5 Opus Thinking, Max Effort | OpenRouter | API |
 | 8 | LLM | Kimi K3 | OpenRouter | API |
@@ -217,7 +233,7 @@ Answer with a single handler name and nothing else.
 | 10 | LLM | Gemma-4-31B-it | OpenRouter | API |
 
 - Leaderboard names are display names; **verify exact OpenRouter model slugs at setup** and record the served ID + date in the MANIFEST.
-- Rationale (one line each, for the writeup): 4 open S1 models = the open System-One class with published/verified runtimes; Jev = the hosted original that defines the class — the anchor comparison the MVP exists to make (amended 2026-10-10, replaces local lev: slowest S1 at ~60 s/call); the 4 API LLMs = one per major lab at high-reasoning settings (frontier anchor); Gemma-4-31B-it = the open-weights LLM, size-matched to the variant mandated by the Kaggle Gemma 4 Developer Agent Competition (`gemma-4-31b-it-qat-w4a16-ct`), served via OpenRouter (amended 2026-10-09; was local 12B — see Amendment note).
+- Rationale (one line each, for the writeup): the S1 slots are the strongest feasible representatives per external benchmarks (S1MB, JevBench, Decision Index — read 2026-10-10), one per maker; Jev = the hosted original that defines the class and ranks #1 on S1MB; Winnow-E4B Q8 = the maker's Gemma-4-E4B fine-tune (the 12B variant JevBench ranked #2 could not fit in 16GB unified memory — disclosed); decider-4b = Mapika's best CPU-feasible (JevBench 71.3); bekko-400m = S1MB #2, with the author's own generalization caveat disclosed; opendecider-small-mlx = the maker's best, Mac-native. The LLM slots: 4 frontier models, one per major lab at high-reasoning settings (LiveBench-driven, owner selection); Gemma-4-31B-it = the open-weights LLM, size-matched to the Kaggle Gemma 4 Developer Agent Competition variant (amended 2026-10-09). Secondarily measured (reported, not featured): decider-2b, opendecider-nano, laya-421m, von — see the 2026-10-10 amendments.
 
 ### 7.2 Adapter contract (every contestant implements exactly this)
 

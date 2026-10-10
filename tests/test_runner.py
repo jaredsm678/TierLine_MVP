@@ -195,13 +195,17 @@ def test_roster_keys_match_amended_design_doc():
     expected_openrouter = {"gemini-3.8-flash", "gpt-6.1-sol",
                            "claude-5.5-opus-thinking", "kimi-k3", "gemma-4-31b"}
     assert set(contestants.OPENROUTER_MODELS) == expected_openrouter
-    # 2026-10-10 amendment: lev replaced by hosted Jev
-    assert set(contestants.LOCAL_CONTESTANT_KEYS) == {
-        "opendecider-nano", "laya-421m", "decider-2b", "von"}
+    # 2026-10-10 session-5b amendment: S1 slots are the benchmark-selected five
     assert contestants.HOSTED_S1_KEYS == ("jev",)
+    assert set(contestants.LOCAL_S1_KEYS) == {
+        "winnow-e4b", "decider-4b", "bekko-400m", "opendecider-small-mlx"}
+    assert set(contestants.LEGACY_S1_KEYS) == {
+        "decider-2b", "opendecider-nano", "laya-421m", "von", "lev"}
     assert len(contestants.ALL_CONTESTANT_KEYS) == 10
-    assert "lev" not in contestants.ALL_CONTESTANT_KEYS  # off-roster but still buildable
-    contestants.build_contestant("lev")  # does not raise
+    assert not (set(contestants.ALL_CONTESTANT_KEYS) & set(contestants.LEGACY_S1_KEYS))
+    # legacy keys still build (reported, not featured); bekko routes to its script
+    for legacy in contestants.LEGACY_S1_KEYS:
+        contestants.build_contestant(legacy)  # does not raise
 
 
 def test_model_entries_are_wellformed():

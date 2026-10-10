@@ -41,8 +41,8 @@ ROOT = Path(__file__).resolve().parents[2]
 RESULTS_DIR = ROOT / "results" / "runs"
 DOC_CAP_USD = 10.0
 
-LLM_KEYS = tuple(contestants.OPENROUTER_MODELS)  # §7.1 rows 6-10 (Gemma amended in)
-S1_KEYS = tuple(contestants.LOCAL_CONTESTANT_KEYS)  # §7.1 rows 1-5
+LLM_KEYS = tuple(contestants.OPENROUTER_MODELS)  # §7.1 rows 6-10
+S1_KEYS = tuple(contestants.HOSTED_S1_KEYS) + tuple(contestants.LOCAL_S1_KEYS)  # §7.1 rows 1-5
 
 BUDGET_EXCEEDED = "budget"
 ABORTED_402 = "http_402"

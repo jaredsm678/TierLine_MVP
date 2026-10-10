@@ -372,12 +372,18 @@ class SystemOneContestant(Contestant):
 
 
 class OpenDeciderContestant(SystemOneContestant):
-    name = "opendecider-nano"
+    """opendecider family. Roster slot: opendecider-small-mlx-8bit (2026-10-10
+    amendment); opendecider-nano remains buildable off-roster."""
+
+    def __init__(self, repo: str = "manjunathshiva/opendecider-nano", name: str = "opendecider-nano"):
+        super().__init__()
+        self.repo = repo
+        self.name = name
 
     def _system_one(self, state_text, options, definitions):
         import opendecider as od
         if self._model is None:
-            self._model = od.load("manjunathshiva/opendecider-nano", device="cpu")
+            self._model = od.load(self.repo)  # device auto-detected; MLX models need pip opendecider[mlx]
         question = {"intent": od.Choice(
             instructions=self.instructions,
             criteria=self._criteria(options, definitions),
@@ -405,12 +411,18 @@ class LayaContestant(SystemOneContestant):
 
 
 class DeciderContestant(SystemOneContestant):
-    name = "decider-2b"
+    """Mapika's decider family. The roster slot is decider-4b v2.1 (2026-10-10
+    amendment); decider-2b remains buildable off-roster."""
+
+    def __init__(self, repo: str = "Mapika/decider-2b", name: str = "decider-2b"):
+        super().__init__()
+        self.repo = repo
+        self.name = name
 
     def _system_one(self, state_text, options, definitions):
         from decider.infer import Decider
         if self._model is None:
-            self._model = Decider("Mapika/decider-2b", device="cpu")
+            self._model = Decider(self.repo, device="cpu")
         question = {"intent": {
             "type": "choice",
             "instructions": self.instructions,
@@ -436,6 +448,53 @@ class LevContestant(SystemOneContestant):
         resp = self._model.system_one(state_text, question)
         answer = resp.answers["intent"]
         return answer.choice, dict(answer.probabilities), _json(_dump(resp)), 0.0
+
+
+class WinnowContestant(SystemOneContestant):
+    """Winnow-12B Q8 (EldanRing): Gemma-4-12B-it fine-tune whose llama.cpp-based
+    server natively serves TypeSafe's /v1/systemone wire format (JevBench #2
+    overall). Expects the local server started via winnow-inference
+    (`winnow.py serve --model q8`, default 127.0.0.1:8091). Direct decisions
+    generate no tokens; cost $0. Single-worker: one server at a time."""
+
+    name = "Winnow-E4B Q8"
+    URL = "http://127.0.0.1:8091/v1/systemone"
+    MAX_ATTEMPTS = 3
+    BACKOFF_S = (2.0, 4.0)
+
+    def _http(self):
+        if self._client is None:
+            self._client = httpx.Client(timeout=320)
+        return self._client
+
+    def _system_one(self, state_text, options, definitions):
+        payload = {
+            "state": state_text,
+            "questions": {"intent": {
+                "type": "choice",
+                "instructions": self.instructions,
+                "criteria": self._criteria(options, definitions),
+            }},
+        }
+        last_error = None
+        for attempt in range(self.MAX_ATTEMPTS):
+            if attempt:
+                time.sleep(self.BACKOFF_S[min(attempt - 1, len(self.BACKOFF_S) - 1)])
+            try:
+                resp = self._http().post(self.URL, json=payload, timeout=300)
+            except httpx.HTTPError as exc:
+                last_error = f"network error: {type(exc).__name__}"
+                continue
+            if resp.status_code == 200:
+                data = resp.json()
+                answer = data["answers"]["intent"]
+                return (answer["choice"], answer.get("probabilities"),
+                        _json(data), 0.0)
+            if resp.status_code == 429 or resp.status_code >= 500:
+                last_error = f"HTTP {resp.status_code}"
+                continue
+            raise RuntimeError(f"Winnow HTTP {resp.status_code}: {resp.text[:200]}")
+        raise RuntimeError(f"gave up after {self.MAX_ATTEMPTS} attempts: {last_error}")
 
 
 class VonContestant(SystemOneContestant):
@@ -532,44 +591,63 @@ def _json(obj) -> str:
     return json.dumps(obj, ensure_ascii=False, default=str)
 
 
-# Roster keys beyond the OpenRouter table (§7.1).
+# Roster keys (§7.1, as amended 2026-10-10 session 5b): the S1 slots are the
+# strongest feasible representatives per external benchmarks, one per maker.
 # (Row 10, Gemma, moved to the OpenRouter table by the 2026-10-09 amendment;
 # LocalOpenAIContestant stays available for any future local LLM.)
-# Row 4, lev, was replaced by hosted Jev by the 2026-10-10 amendment;
-# LevContestant remains available ("lev" still builds) but is off-roster.
-LOCAL_CONTESTANT_KEYS = (
-    "opendecider-nano",
-    "laya-421m",
-    "decider-2b",
-    "von",
+HOSTED_S1_KEYS = ("jev",)
+LOCAL_S1_KEYS = (
+    "winnow-e4b",             # EldanRing Winnow (E4B Q8; 12B didn't fit 16GB — disclosed)
+    "decider-4b",             # Mapika, JevBench 71.3 (replaces decider-2b)
+    "bekko-400m",             # hotchpotch, S1MB #2 (separate venv; see scripts/bekko_run.py)
+    "opendecider-small-mlx",  # manjunathshiva's best, Mac-native MLX
 )
 
-# §7.1 row 4 (amended 2026-10-10): hosted Jev via TypeSafe's official API.
-HOSTED_S1_KEYS = ("jev",)
+# Superseded/off-roster keys: still buildable and reported (secondary table in
+# the writeup) — displaced by the 2026-10-10 amendments.
+LEGACY_S1_KEYS = (
+    "decider-2b",
+    "opendecider-nano",
+    "laya-421m",
+    "von",
+    "lev",
+)
 
 
 def build_contestant(key: str, client: httpx.Client | None = None) -> Contestant:
-    """Instantiate an adapter by roster key (all ten contestants, §7.1)."""
+    """Instantiate an adapter by roster key (§7.1 as amended); legacy keys of
+    displaced models also build (reported, not featured)."""
     if key in OPENROUTER_MODELS:
         return OpenRouterContestant(key, client=client)
-    if key == "opendecider-nano":
-        return OpenDeciderContestant()
-    if key == "laya-421m":
-        return LayaContestant()
-    if key == "decider-2b":
-        return DeciderContestant()
-    if key == "lev":
-        return LevContestant()
-    if key == "von":
-        return VonContestant()
     if key == "jev":
         return JevContestant()
-    if key == "lev":  # off-roster since the 2026-10-10 amendment; still buildable
+    if key == "winnow-e4b":
+        return WinnowContestant()
+    if key == "decider-4b":
+        return DeciderContestant(repo="Mapika/decider-4b", name="decider-4b")
+    if key == "decider-2b":  # off-roster since 2026-10-10; still buildable
+        return DeciderContestant()
+    if key == "opendecider-small-mlx":
+        return OpenDeciderContestant(
+            repo="manjunathshiva/opendecider-small-mlx-8bit",
+            name="opendecider-small-mlx-8bit")
+    if key == "opendecider-nano":  # off-roster since 2026-10-10
+        return OpenDeciderContestant()
+    if key == "laya-421m":  # off-roster since 2026-10-10
+        return LayaContestant()
+    if key == "von":  # off-roster since 2026-10-10
+        return VonContestant()
+    if key == "lev":  # off-roster since 2026-10-10
         return LevContestant()
+    if key == "bekko-400m":
+        # Pinned deps (torch/transformers) would conflict with the main venv:
+        # rows are produced by scripts/bekko_run.py in .venv-bekko.
+        raise RuntimeError(
+            "bekko-400m runs via scripts/bekko_run.py in .venv-bekko")
     raise KeyError(f"unknown contestant {key!r}; known: "
                    f"{sorted(ALL_CONTESTANT_KEYS)}")
 
 
-#: All ten roster keys (§7.1, as amended): 5 OpenRouter LLMs + 4 local S1 + Jev.
-ALL_CONTESTANT_KEYS = (tuple(OPENROUTER_MODELS) + LOCAL_CONTESTANT_KEYS
-                       + HOSTED_S1_KEYS)
+#: The ten roster keys (§7.1, as amended): 5 OpenRouter LLMs + Jev + 4 local S1.
+ALL_CONTESTANT_KEYS = (tuple(OPENROUTER_MODELS) + HOSTED_S1_KEYS
+                       + LOCAL_S1_KEYS)
