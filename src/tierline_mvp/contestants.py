@@ -118,6 +118,30 @@ def api_key() -> str:
     )
 
 
+def openrouter_balance() -> dict:
+    """Live balance probe (free endpoints, §-adjacent to the §7.2 cost guard).
+
+    Returns {"account_remaining_usd", "key_limit_remaining_usd"}. The key
+    limit is None when the key has no credit limit set. The runner's preflight
+    (session 5) refuses to start below a reserve and re-checks periodically;
+    HTTP 402 during a run aborts the run (not just the row) because every
+    subsequent call would fail identically.
+    """
+    headers = {"Authorization": f"Bearer {api_key()}"}
+    with httpx.Client(timeout=30) as client:
+        credits = client.get("https://openrouter.ai/api/v1/credits", headers=headers)
+        credits.raise_for_status()
+        data = credits.json()["data"]
+        account_remaining = float(data["total_credits"]) - float(data["total_usage"])
+        key_info = client.get("https://openrouter.ai/api/v1/key", headers=headers)
+        key_info.raise_for_status()
+        limit = key_info.json()["data"].get("limit_remaining")
+    return {
+        "account_remaining_usd": account_remaining,
+        "key_limit_remaining_usd": None if limit is None else float(limit),
+    }
+
+
 def build_payload(
     slug: str,
     prompt_version: str,

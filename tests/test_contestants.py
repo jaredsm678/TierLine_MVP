@@ -160,6 +160,20 @@ def test_empty_content_is_label_none_without_error():
     assert result["label"] is None and result["error"] is None
 
 
+def test_openrouter_balance_parses_credits_and_key_limit(monkeypatch):
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/credits"):
+            return httpx.Response(200, json={"data": {"total_credits": 10.0, "total_usage": 0.19}})
+        return httpx.Response(200, json={"data": {"limit_remaining": 9.81}})
+
+    transport = httpx.MockTransport(handler)
+    real_client = httpx.Client  # capture before patching: the lambda must not call itself
+    monkeypatch.setattr(contestants.httpx, "Client",
+                        lambda *a, **k: real_client(transport=transport))
+    balance = contestants.openrouter_balance()
+    assert balance == {"account_remaining_usd": 9.81, "key_limit_remaining_usd": 9.81}
+
+
 def test_unknown_contestant_key_raises():
     with pytest.raises(KeyError, match="unknown contestant"):
         contestants.build_contestant("not-a-model")
