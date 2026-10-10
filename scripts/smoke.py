@@ -32,7 +32,8 @@ from tierline_mvp import contestants, runner, schema, scoring  # noqa: E402
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--model", default="gemini-3.8-flash",
-                    choices=sorted(contestants.OPENROUTER_MODELS))
+                    choices=sorted(list(contestants.OPENROUTER_MODELS)
+                                   + list(contestants.LOCAL_CONTESTANT_KEYS)))
     ap.add_argument("--version", default="V1", choices=("V1", "V2"))
     ap.add_argument("--rows", type=int, default=5)
     ap.add_argument("--cap-usd", type=float, default=None,
@@ -47,8 +48,10 @@ def main() -> None:
 
     contestant = contestants.build_contestant(args.model)
     meter = runner.CostMeter(args.cap_usd) if args.cap_usd else None
-    print(f"model={contestant.name}  slug={contestant.slug}  "
-          f"reasoning={contestant.reasoning_effort}  version={args.version}  "
+    slug = getattr(contestant, "slug", "(native)")
+    effort = getattr(contestant, "reasoning_effort", None) or "n/a"
+    print(f"model={contestant.name}  slug={slug}  "
+          f"reasoning={effort}  version={args.version}  "
           f"rows={len(picked)}" + (f"  cap=${args.cap_usd:.2f}" if meter else ""))
 
     # Persist every smoke result (incl. raw output) in the §9 results-row
