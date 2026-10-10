@@ -42,6 +42,34 @@ OPENROUTER_MODELS: dict[str, dict] = {
         "price_prompt_per_1m_usd": 0.75,
         "price_completion_per_1m_usd": 3.75,
     },
+    "gpt-6.1-sol": {
+        "display_name": "GPT-6.1 Sol, Max Effort",
+        "slug": "openai/gpt-6.1-sol",
+        "reasoning_effort": "max",
+        "max_tokens": 8192,  # thinking headroom (§7.2)
+        "price_prompt_per_1m_usd": 2.00,
+        "price_completion_per_1m_usd": 10.00,
+    },
+    "claude-5.5-opus-thinking": {
+        # Roster display name per §7.1; there is no separate "-thinking" slug:
+        # thinking is enabled via the reasoning parameter on this model.
+        "display_name": "Claude 5.5 Opus Thinking, Max Effort",
+        "slug": "anthropic/claude-opus-5.5",
+        "reasoning_effort": "max",
+        "max_tokens": 16384,  # max-effort thinking needs generous headroom
+        "price_prompt_per_1m_usd": 4.00,
+        "price_completion_per_1m_usd": 20.00,
+    },
+    "kimi-k3": {
+        # Roster gives no effort level for Kimi; §7.1 rationale says the four
+        # API LLMs run at high-reasoning settings, so effort=high (recorded).
+        "display_name": "Kimi K3",
+        "slug": "moonshotai/kimi-k3",
+        "reasoning_effort": "high",
+        "max_tokens": 8192,
+        "price_prompt_per_1m_usd": 0.64,
+        "price_completion_per_1m_usd": 13.50,
+    },
 }
 
 RESULT_KEYS = ("label", "probs", "latency_ms", "cost_usd", "raw", "error")
