@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,6 +51,30 @@ def main() -> None:
           f"reasoning={contestant.reasoning_effort}  version={args.version}  "
           f"rows={len(picked)}" + (f"  cap=${args.cap_usd:.2f}" if meter else ""))
 
+    # Persist every smoke result (incl. raw output) in the §9 results-row
+    # schema. Smoke files are diagnostics, not the frozen run store: each run
+    # overwrites results/smoke/<model>-<version>.jsonl; append-only runs with
+    # resume-safety arrive in session 5 under results/runs/.
+    out_path = ROOT / "results" / "smoke" / f"{args.model}-{args.version}.jsonl"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_file = out_path.open("w", encoding="utf-8")
+    print(f"saving raw results to {out_path.relative_to(ROOT)}")
+
+    def result_row(row, result) -> dict:
+        return {
+            "run_id": f"smoke-{args.model}-{args.version}",
+            "row_id": row["row_id"],
+            "model": contestant.name,
+            "prompt_version": args.version,
+            "label": result["label"],
+            "probs": result["probs"],
+            "latency_ms": result["latency_ms"],
+            "cost_usd": result["cost_usd"],
+            "raw": result["raw"],
+            "error": result["error"],
+            "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        }
+
     scored = 0
     correct = 0
     oos_selections = 0
@@ -66,6 +91,8 @@ def main() -> None:
             oos_selections += int(verdict["oos_selection"])
             if meter:
                 meter.charge(result["cost_usd"])
+            out_file.write(json.dumps(result_row(row, result), ensure_ascii=False) + "\n")
+            out_file.flush()
             status = "ok" if result["error"] is None else f"ERROR: {result['error']}"
             print(f"  {row['row_id']}  {row['intent']:16} -> {str(result['label']):16} "
                   f"valid={str(verdict['valid']):5} correct={str(verdict['correct']):5} "
@@ -74,11 +101,13 @@ def main() -> None:
             if not verdict["valid"] and result["error"] is None:
                 print(f"      raw: {str(result['raw'])[:200]!r}")
     except runner.BudgetExceeded as exc:
+        out_file.close()
         print(f"BUDGET ABORT: {exc}")
         if meter:
             print(f"--- spent ${meter.total_usd:.4f} of the ${meter.cap_usd:.2f} test cap "
                   f"({meter.calls} call(s) completed); remaining rows not called")
         return
+    out_file.close()
 
     total_cost = meter.total_usd if meter else float("nan")
     cost_note = f"total cost ${total_cost:.6f}" if meter else "(no cap set)"
