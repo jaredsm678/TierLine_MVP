@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TierLine MVP — Table 1 (color-coded)</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 2rem; color: #1a1a1a; }
+  h2 { font-weight: 600; }
+  table { border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 7px 12px; border-bottom: 1px solid #ddd; text-align: left; }
+  th { border-bottom: 2px solid #999; font-weight: 600; white-space: nowrap; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.s1 { background: #fdecea; }        /* light red — System-One */
+  tr.llm { background: #e8f5e9; }       /* light green — LLM */
+  td.tag { font-weight: 700; }
+  tr.s1 td.tag { color: #b3261e; }
+  tr.llm td.tag { color: #1b7e3d; }
+  .legend { font-size: 13px; color: #333; margin-top: 16px; max-width: 950px; line-height: 1.5; }
+  .legend b { font-weight: 700; }
+  .note { font-size: 12px; color: #555; margin-top: 12px; max-width: 950px; }
+</style>
+</head>
+<body>
+<h2>TierLine MVP — Table 1: contestants ordered by difficult-subset accuracy</h2>
+<table>
+<tr><th>#</th><th>Model</th><th>Class</th><th>Difficult (75)</th><th>Overall (150)</th><th>Ordinary (75)</th><th>Drop (pp)</th><th>OOS-sel</th><th>Invalid</th><th>Cost per 1k</th><th>Time per 1k</th></tr>
+<tr class="llm"><td>1</td><td>Claude 5.5 Opus Thinking</td><td class="tag">LLM</td><td class="num"><b>88.0%</b> [78.7–93.6]</td><td class="num">93.3% [88.2–96.3]</td><td class="num">98.7% [92.8–99.8]</td><td class="num">10.7</td><td class="num">5</td><td class="num">1</td><td class="num">$9.60</td><td class="num">45.6 h †</td></tr>
+<tr class="llm"><td>2</td><td>Gemini 3.8 Flash</td><td class="tag">LLM</td><td class="num">86.7% [77.2–92.6]</td><td class="num">93.3% [88.2–96.3]</td><td class="num"><b>100.0%</b> [95.1–100]</td><td class="num">13.3</td><td class="num">5</td><td class="num">1</td><td class="num">$1.88</td><td class="num">196 min †</td></tr>
+<tr class="llm"><td>3</td><td>GPT-6.1 Sol</td><td class="tag">LLM</td><td class="num">86.7% [77.2–92.6]</td><td class="num">92.7% [87.3–95.9]</td><td class="num">98.7% [92.8–99.8]</td><td class="num">12.0</td><td class="num">8</td><td class="num">0</td><td class="num">$2.14</td><td class="num">91 min †</td></tr>
+<tr class="llm"><td>4</td><td>Kimi K3</td><td class="tag">LLM</td><td class="num">84.0% [74.1–90.6]</td><td class="num">90.7% [84.9–94.4]</td><td class="num">97.3% [90.8–99.3]</td><td class="num">13.3</td><td class="num">9</td><td class="num">0</td><td class="num">$2.35</td><td class="num">235 min †</td></tr>
+<tr class="llm"><td>5</td><td>Gemma-4-31B</td><td class="tag">LLM</td><td class="num">84.0% [74.1–90.6]</td><td class="num">91.3% [85.7–94.9]</td><td class="num">98.7% [92.8–99.8]</td><td class="num">14.7</td><td class="num">8</td><td class="num">0</td><td class="num">$0.036</td><td class="num">8.4 min †</td></tr>
+<tr class="s1"><td>6</td><td><b>Jev 1.13.0</b> (hosted)</td><td class="tag">S1</td><td class="num"><b>81.3%</b> [71.1–88.5]</td><td class="num">90.0% [84.2–93.8]</td><td class="num">98.7% [92.8–99.8]</td><td class="num">17.3</td><td class="num">12</td><td class="num">0</td><td class="num"><b>$0.041</b></td><td class="num">3.0 min</td></tr>
+<tr class="s1"><td>7</td><td><b>decider-4b v2.1</b></td><td class="tag">S1</td><td class="num">78.7% [68.1–86.4]</td><td class="num">89.3% [83.4–93.3]</td><td class="num"><b>100.0%</b> [95.1–100]</td><td class="num">21.3</td><td class="num">8</td><td class="num">0</td><td class="num">$0 (local)</td><td class="num">1,174 min</td></tr>
+<tr class="s1"><td>8</td><td><b>bekko-400m</b></td><td class="tag">S1</td><td class="num">76.0% [65.2–84.2]</td><td class="num">84.7% [78.0–89.6]</td><td class="num">93.3% [85.3–97.1]</td><td class="num">17.3</td><td class="num">9</td><td class="num">0</td><td class="num">$0 (local)</td><td class="num">9.0 min</td></tr>
+<tr class="s1"><td>9</td><td><b>opendecider-small-mlx</b></td><td class="tag">S1</td><td class="num">74.7% [63.8–83.1]</td><td class="num">86.7% [80.3–91.2]</td><td class="num">98.7% [92.8–99.8]</td><td class="num">24.0</td><td class="num">9</td><td class="num">0</td><td class="num">$0 (local)</td><td class="num">23.4 min</td></tr>
+<tr class="s1"><td>10</td><td><b>Winnow-E4B Q8</b></td><td class="tag">S1</td><td class="num">68.0% [56.8–77.5]</td><td class="num">82.0% [75.1–87.3]</td><td class="num">96.0% [88.9–98.6]</td><td class="num">28.0</td><td class="num">19</td><td class="num">0</td><td class="num">$0 (local)</td><td class="num">22.2 min</td></tr>
+</table>
+<div class="legend">
+<b>Legend.</b>
+<b>Difficult / Ordinary</b> — accuracy on the 75 published TF-IDF-difficult and the 75 ordinary CLINC150 bank-domain test utterances; Wilson 95% CIs.
+<b>Drop (pp)</b> — ordinary minus difficult accuracy in percentage points: how much the model degrades on the difficult half.
+<b>OOS-sel</b> — false abstentions: rows answered <i>out_of_scope</i> although the gold intent is one of the 15 banking intents.
+<b>Invalid</b> — rows whose normalized answer was not one of the 16 options; scored wrong. System-One models cannot emit these by construction (answer space = the option set).
+<b>Cost per 1k</b> — actual billed API cost to serve 1,000 decisions at measured token usage; local models cost $0 (electricity only).
+<b>Time per 1k</b> — median (p50) single-decision latency × 1,000: sequential wall-clock to serve 1,000 decisions. This is a throughput illustration, not a benchmark: real deployments batch and parallelize.
+</div>
+<p class="note">
+Pooled class rows: S1 86.5% overall (75.7% difficult / 97.3% ordinary) vs LLM 92.3% (85.9% / 98.7%).
+Gap: +1.3pp on ordinary rows (p=0.19, n.s.) vs <b>+10.1pp on difficult rows (z=3.52, p=0.0004)</b>.
+† LLM latencies are contention-polluted (measured under concurrent load on a shared laptop) — directional only; S1 latencies are clean sequential measurements.
+decider-4b carries a CLINC training-split exposure caveat; see report limitations. All values recomputable from the append-only run records.
+</p>
+</body>
+</html>

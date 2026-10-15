@@ -1,0 +1,11 @@
+You will route one customer request to the correct handler.
+
+The 16 handlers are:
+<the 16 frozen definitions, in fixed alphabetical order>
+
+Request:
+"""
+<utterance>
+"""
+
+Reply with exactly one handler name from the list above — nothing else.

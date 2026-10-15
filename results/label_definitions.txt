@@ -1,0 +1,16 @@
+- account_blocked: The customer reports that their account is blocked, locked, or frozen — or asks why. (A request to impose a block is freeze_account.)
+- balance: The customer asks how much money is in an account right now — a point-in-time amount. (A list of activity is transactions; a spending total is spending_history; an amount owed on a bill is bill_balance.)
+- bill_balance: The customer asks how much they owe on a bill — the total amount due. (The due date is bill_due; the smallest allowed payment is min_payment.)
+- bill_due: The customer asks when a payment is due — the date or deadline. (The amount owed is bill_balance; making the payment is pay_bill.)
+- freeze_account: The customer asks to block, freeze, or restrict activity on their account. (An already-blocked account being asked about is account_blocked.)
+- interest_rate: The customer asks about an interest rate — charged or earned — on any account, loan, or card. (An amount owed or available is not a rate question.)
+- min_payment: The customer asks for the minimum amount they are required to pay. (The full amount owed is bill_balance; the due date is bill_due.)
+- order_checks: The customer wants to order checkbooks or more checks. (Paying money out is transfer or pay_bill, not ordering checks.)
+- out_of_scope: The request is none of the 15 banking requests above — for example: device commands, other services or companies, general knowledge questions, or small talk.
+- pay_bill: The customer wants to make a payment toward a bill, or asks for help paying one. (The due date is bill_due; the amount owed is bill_balance.)
+- pin_change: The customer wants to change, set, or reset a PIN — including having forgotten it.
+- report_fraud: The customer reports unauthorized or suspicious charges or activity, or asks how to report fraud. (An ordinary lookup of their own charges is transactions.)
+- routing: The customer asks for a bank or account routing number.
+- spending_history: The customer asks for totals or summaries of spending, usually by category or time period. (Individual entries are transactions; the current amount available is balance.)
+- transactions: The customer asks to see individual account activity — a list or detail of charges, purchases, or deposits. (A point-in-time amount is balance; a spending summary is spending_history.)
+- transfer: The customer asks to move money between accounts. (Viewing past activity is transactions; paying a bill is pay_bill.)
