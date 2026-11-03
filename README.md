@@ -70,7 +70,8 @@ Final Project
 Prompt Construction
 MVP
 - Paste prompt construction here
-￼<img width="574" height="292" alt="You will route one customer request to the correct handler" src="https://github.com/user-attachments/assets/3cef2bb2-5c72-47f0-82a9-fe41d4386c13" />
+<img width="574" height="292" alt="You will route one customer request to the correct handler" src="https://github.com/user-attachments/assets/3cef2bb2-5c72-47f0-82a9-fe41d4386c13" />
+
 - For cost purposes we did not vary this prompt
 Final Project
 - We should probably vary our prompt at some point? The original mvp results seemed reasonable so I didn’t see a need to vary it for the mvp
