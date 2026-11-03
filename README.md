@@ -94,7 +94,9 @@ Final Project
 
 Results
 MVP
+
 <img width="806" height="620" alt="Claude 5 5 Opus" src="https://github.com/user-attachments/assets/197cc509-e5aa-446f-9f85-2e0db4fa2799" />
+
 Final Results
 - Results will need to have much more analysis in the final version
 - Its hard to forecast too much on what we will analyze before developing the other sections more
