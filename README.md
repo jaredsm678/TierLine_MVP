@@ -59,6 +59,7 @@ Label Definitions
 MVP
 - Here are my label definitions
 <img width="582" height="698" alt="- account_blocked The customer reports that their account is blocked," src="https://github.com/user-attachments/assets/866c1abd-f8bb-4c4f-a5ec-dbb58b442fd1" />
+
 - We used the following paper to inform our model definitions: https://aclanthology.org/2024.sigdial-1.39/ 
     - We used these label definitions for both the LLMs and the S1s
     - This label definition framework is optimized for LLMs so that may bias the S1 model performance down
